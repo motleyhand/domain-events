@@ -17,6 +17,8 @@ interface OutboxStore
 
     public function publish(OutboxRecord $outboxRecord): void;
 
+    public function refresh(OutboxRecord $outboxRecord): void;
+
     public function purgePublishedEvents(): void;
 
     /**

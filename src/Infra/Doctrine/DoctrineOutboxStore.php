@@ -69,6 +69,11 @@ final class DoctrineOutboxStore implements OutboxStore
         $this->entityManager->flush();
     }
 
+    public function refresh(OutboxRecord $outboxRecord): void
+    {
+        $this->entityManager->refresh($outboxRecord);
+    }
+
     public function purgePublishedEvents(): void
     {
         $repo = $this->entityManager->getRepository(OutboxRecord::class);

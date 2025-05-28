@@ -39,12 +39,15 @@ final class LockableEventPublisher implements EventPublisher
     private function publishEvent(OutboxRecord $outboxRecord): void
     {
         $lock = $this->lockFactory->createLock(\sprintf('outbox-record-%d', $outboxRecord->getId()));
-
-        if ($lock->acquire()) {
+        if (!$lock->acquire()) {
+            return;
+        }
+        $this->outboxStore->refresh($outboxRecord);
+        if (!$outboxRecord->isPublished()) {
             $this->domainEventDispatcher->dispatch($outboxRecord->getDomainEvent());
             $this->outboxStore->publish($outboxRecord);
-
-            $lock->release();
         }
+
+        $lock->release();
     }
 }

@@ -82,6 +82,11 @@ class OutboxRecord
         return $this->publishedOn;
     }
 
+    public function isPublished(): bool
+    {
+        return $this->publishedOn !== null;
+    }
+
     public function setPublishedOn(CarbonImmutable $publishedOn): void
     {
         $this->publishedOn = $publishedOn;
